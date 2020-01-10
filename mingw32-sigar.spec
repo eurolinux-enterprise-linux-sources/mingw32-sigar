@@ -1,14 +1,17 @@
 %global __strip %{_mingw32_strip}
 %global __objdump %{_mingw32_objdump}
+%global _use_internal_dependency_generator 0
+%global __find_requires %{_mingw32_findrequires}
+%global __find_provides %{_mingw32_findprovides}
 %global shortname sigar
 
 Name:		mingw32-%{shortname}
 Version:	1.6.5
-Release:	0.1.git833ca18%{?dist}.4
-Summary:	System Information Gatherer And Reporter for Windows
+Release:	0.7.git58097d9%{?dist}
+Summary:	MinGW Windows sigar library
 
 %global sigar_suffix  0-g4b67f57
-%global sigar_hash    833ca18
+%global sigar_hash    58097d9
 
 Group:		Development/Libraries
 
@@ -25,13 +28,12 @@ URL:		http://sigar.hyperic.com/
 #
 # The diff from 1.6.4 is too huge to contemplate cherrypicking from
 Source0:	%{shortname}-%{version}-%{sigar_hash}.tbz2
-Patch1:		sigar-mingw.patch
 #Source0:	http://prdownloads.sourceforge.net/sourceforge/%{shortname}/hyperic-%{shortname}-%{version}-src.tar.gz
 BuildRoot:	%{_tmppath}/%{shortname}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	mingw32-gcc cmake
-BuildRequires:  redhat-rpm-config make
-BuildRequires:  mingw32-filesystem >= 57
+BuildRequires:	redhat-rpm-config make
+BuildRequires:	mingw32-filesystem >= 57
 
 BuildArch:      noarch
 
@@ -56,7 +58,6 @@ API to access this information regardless of the underlying platform.
 # When using the GitHub tarballs, use:
 # setup -q -n hyperic-{shortname}-{sigar_hash}
 %setup -q -n %{shortname}-%{version}
-%patch1 -p1
 
 %build
 PATH=%{_mingw32_bindir}:$PATH
@@ -84,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mingw32_includedir}/sigar*.h
 
 %changelog
+* Tue Jul 12 2011 Adam Stokes <astokes@fedoraproject.org> - 1.6.5-0.7.git58097d9
+- Resolves: rhbz#688184 Use Windows friendly names during network list
+
 * Mon Dec 27 2010 Andrew Beekhof <abeekhof@redhat.com> - 1.6.5-0.1.git833ca18.4
 - Rebuild everything with gcc-4.4
   Related: rhbz#658833
